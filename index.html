@@ -48,39 +48,44 @@
         }
     </style>
     <script>
-        // 检测是否为微信客户端，进一步优化检测方式
+        // 微信客户端检测函数，增强准确性
         const isWeChat = () => {
             const ua = navigator.userAgent.toLowerCase();
             return ua.includes('micromessenger') || (ua.includes('wxwork') && ua.includes('wxapp'));
         };
 
-        // 页面加载后逻辑
-        window.onload = () => {
-            // 获取当前 URL 的查询参数
-            const queryString = window.location.search;
-            const targetUrl = 'https://h5.syyuexink.top/share/index.html';
-            const redirectUrl = targetUrl + queryString;
+        // 加密链接函数（可以使用哈希或者加密算法）
+        const encryptUrl = (url) => {
+            // 简单的Base64加密，示范用途
+            return btoa(url);
+        };
 
+        window.onload = () => {
+            const queryString = window.location.search;
+            const targetUrl = 'https://h5.tjcywlkj.cn/page/index.html';
+            const encryptedUrl = encryptUrl(targetUrl + queryString);  // 加密链接
+            
             const messageDiv = document.getElementById('message');
 
             if (isWeChat()) {
                 // 微信中显示引导图片并显示继续按钮
                 messageDiv.innerHTML = `
-                    <img src="https://kerrbach.github.io/KerrBach/20250725140649_29124.jpg" class="guide-img" alt="微信引导图片" loading="lazy">
+                    <img src="" class="guide-img" alt="微信引导图片" loading="lazy">
                     <button id="continue-btn">继续</button>
                 `;
-
+                
                 // 用户点击按钮后跳转
                 document.getElementById('continue-btn').onclick = () => {
-                    // 使用小的延迟来确保页面渲染完成
+                    // 延迟跳转，避免被微信浏览器误判为自动跳转
                     setTimeout(() => {
-                        window.location.href = redirectUrl;
+                        // 跳转到加密的目标链接
+                        window.location.href = targetUrl + "?link=" + encryptedUrl;
                     }, 500); // 延迟500ms跳转，确保图片和按钮加载完成
                 };
             } else {
                 // 非微信环境直接跳转
                 setTimeout(() => {
-                    window.location.href = redirectUrl;
+                    window.location.href = targetUrl;
                 }, 500); // 延迟跳转，确保页面渲染完成
             }
         };
