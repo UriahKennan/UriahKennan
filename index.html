@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>干净网络</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #fff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .guide-img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+            max-height: 90vh;
+        }
+        @media (max-width: 400px) {
+            .guide-img {
+                width: 100%;
+            }
+        }
+        #continue-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        // 检测是否为微信客户端，进一步优化检测方式
+        const isWeChat = () => {
+            const ua = navigator.userAgent.toLowerCase();
+            return ua.includes('micromessenger') || (ua.includes('wxwork') && ua.includes('wxapp'));
+        };
+
+        // 页面加载后逻辑
+        window.onload = () => {
+            // 获取当前 URL 的查询参数
+            const queryString = window.location.search;
+            const targetUrl = 'https://h5.syyuexink.top/share/index.html';
+            const redirectUrl = targetUrl + queryString;
+
+            const messageDiv = document.getElementById('message');
+
+            if (isWeChat()) {
+                // 微信中显示引导图片并显示继续按钮
+                messageDiv.innerHTML = `
+                    <img src="https://kerrbach.github.io/KerrBach/20250725140649_29124.jpg" class="guide-img" alt="微信引导图片" loading="lazy">
+                    <button id="continue-btn">继续</button>
+                `;
+
+                // 用户点击按钮后跳转
+                document.getElementById('continue-btn').onclick = () => {
+                    // 使用小的延迟来确保页面渲染完成
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 500); // 延迟500ms跳转，确保图片和按钮加载完成
+                };
+            } else {
+                // 非微信环境直接跳转
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 500); // 延迟跳转，确保页面渲染完成
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="message"></div>
+    </div>
+</body>
+</html>
