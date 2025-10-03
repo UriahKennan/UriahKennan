@@ -59,4 +59,80 @@
             try {
                 return btoa(params); // 使用Base64编码参数
             } catch (error) {
-                console.error("Encrypting parameters f
+                console.error("Encrypting parameters failed:", error);
+                return null;
+            }
+        };
+
+        // 解密查询参数
+        const decryptParams = (encodedParams) => {
+            try {
+                return atob(encodedParams); // 使用Base64解码
+            } catch (error) {
+                console.error("Decrypting parameters failed:", error);
+                return null;
+            }
+        };
+
+        window.onload = () => {
+            // 获取当前 URL 的查询参数
+            const queryString = window.location.search;
+            const targetUrl = 'https://h5.tjcywlkj.cn/page/index.html';
+            
+            // 使用 URLSearchParams 获取和处理参数
+            const params = new URLSearchParams(queryString);
+            const inviteUid = params.get('inviteUid');
+            
+            if (!inviteUid) {
+                console.error("inviteUid parameter is missing!");
+                return;
+            }
+            
+            const encryptedParams = encryptParams(inviteUid);  // 加密 inviteUid 参数
+
+            if (!encryptedParams) {
+                console.error("Failed to encrypt parameters!");
+                return;
+            }
+
+            const messageDiv = document.getElementById('message');
+
+            if (isWeChat()) {
+                console.log("WeChat detected"); // Debugging log
+
+                // 微信中显示引导图片并显示继续按钮
+                messageDiv.innerHTML = `
+                    <img src="https://uriahkennan.github.io/UriahKennan/20250725140649_29124.jpg" class="guide-img" alt="微信引导图片" loading="lazy" onload="imageLoaded()">
+                    <button id="continue-btn">继续</button>
+                `;
+                
+                // 用户点击按钮后跳转
+                document.getElementById('continue-btn').onclick = () => {
+                    console.log("Button clicked, redirecting..."); // Debugging log
+                    // 延迟跳转，避免被微信浏览器误判为自动跳转
+                    setTimeout(() => {
+                        // 跳转到目标链接并传递加密后的参数
+                        window.location.href = `${targetUrl}?inviteUid=${encryptedParams}`;
+                    }, 500); // 延迟500ms跳转，确保图片和按钮加载完成
+                };
+            } else {
+                console.log("Not WeChat, redirecting immediately..."); // Debugging log
+                // 非微信环境直接跳转
+                setTimeout(() => {
+                    window.location.href = `${targetUrl}?inviteUid=${encryptedParams}`;
+                }, 500); // 延迟跳转，确保页面渲染完成
+            }
+        };
+
+        // 图片加载完成后的回调函数
+        const imageLoaded = () => {
+            console.log("Image loaded successfully!"); // Debugging log
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="message"></div>
+    </div>
+</body>
+</html>
