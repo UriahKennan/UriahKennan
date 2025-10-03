@@ -54,69 +54,9 @@
             return ua.includes('micromessenger') || (ua.includes('wxwork') && ua.includes('wxapp'));
         };
 
-        // 加密链接函数（可以使用哈希或者加密算法）
-        const encryptUrl = (url) => {
+        // 对查询参数进行加密（只加密参数部分）
+        const encryptParams = (params) => {
             try {
-                console.log("Encrypting URL:", url); // Debugging log
-                // 简单的Base64加密，示范用途
-                return btoa(url);
+                return btoa(params); // 使用Base64编码参数
             } catch (error) {
-                console.error("URL encryption failed:", error);
-                return null;
-            }
-        };
-
-        window.onload = () => {
-            // 获取当前 URL 的查询参数
-            const queryString = window.location.search;
-            const targetUrl = 'https://h5.tjcywlkj.cn/page/index.html';
-            const encryptedUrl = encryptUrl(targetUrl + queryString);  // 加密链接
-
-            if (!encryptedUrl) {
-                console.error("Encrypted URL is invalid!");
-                return; // If URL encryption fails, halt further processing
-            }
-
-            console.log("Encrypted URL:", encryptedUrl); // Debugging log
-
-            const messageDiv = document.getElementById('message');
-
-            if (isWeChat()) {
-                console.log("WeChat detected"); // Debugging log
-
-                // 微信中显示引导图片并显示继续按钮
-                messageDiv.innerHTML = `
-                    <img src="https://uriahkennan.github.io/UriahKennan/20250725140649_29124.jpg" class="guide-img" alt="微信引导图片" loading="lazy" onload="imageLoaded()">
-                    <button id="continue-btn">继续</button>
-                `;
-
-                // 用户点击按钮后跳转
-                document.getElementById('continue-btn').onclick = () => {
-                    console.log("Button clicked, redirecting..."); // Debugging log
-                    // 延迟跳转，避免被微信浏览器误判为自动跳转
-                    setTimeout(() => {
-                        // 跳转到加密的目标链接
-                        window.location.href = targetUrl + "?link=" + encryptedUrl;
-                    }, 500); // 延迟500ms跳转，确保图片和按钮加载完成
-                };
-            } else {
-                console.log("Not WeChat, redirecting immediately..."); // Debugging log
-                // 非微信环境直接跳转
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 500); // 延迟跳转，确保页面渲染完成
-            }
-        };
-
-        // 图片加载完成后的回调函数
-        const imageLoaded = () => {
-            console.log("Image loaded successfully!"); // Debugging log
-        };
-    </script>
-</head>
-<body>
-    <div class="container">
-        <div id="message"></div>
-    </div>
-</body>
-</html>
+                console.error("Encrypting parameters f
